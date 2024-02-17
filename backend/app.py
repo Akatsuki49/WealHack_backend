@@ -27,6 +27,7 @@ def test_route():
 def analyze_image():
     # Assuming the image is sent as a file
     image_file = request.files['image']
+    text_input = request.form['text_input']
 
     # Save the image temporarily
     image_path = 'temp_image.jpg'
@@ -35,12 +36,17 @@ def analyze_image():
     # Analyze face
     results = analyze_emotion(image_path)
 
+    send_results = {
+        'emotion': results,
+        'text_input': text_input
+    }
+
     # Remove the temporary image file
     os.remove(image_path)
 
     # Post results to /prompt endpoint
     prompt_url = "http://localhost:5000/prompt"
-    response = requests.post(prompt_url, json=results)
+    response = requests.post(prompt_url, json=send_results)
 
     return response.text, response.status_code
 
@@ -53,12 +59,14 @@ def analyze_image():
 def generate_prompt():
     # Assuming the text message is sent as JSON
 
-    analysis_result = request.json  # this will be coming from ml model analysis
-    data_input = "I have been feeling very low lately, my cat passed away, he was my best friend for the last 10 years.He was the best thing that ever happened to me. I wanna kill myself"
+    data = request.json  # this will be coming from ml model analysis
+    # data_input = "I have been feeling very low lately, my cat passed away, he was my best friend for the last 10 years.He was the best thing that ever happened to me. I wanna kill myself"
+    analyze_emotion = data['emotion']
+    data_input = data['text_input']
 
     # Your prompt generation logic here
     # This is just a placeholder
-    prompt = f"Your face analysis shows {analysis_result} emotion. Your message: {data_input}, based on this give me an appropriate response"
+    prompt = f"Your face analysis shows {analyze_emotion} emotion. Your message: {data_input}, based on this give me an appropriate response"
 
     # Send prompt to Mistral (replace this with your actual implementation)
 
@@ -84,4 +92,4 @@ def generate_prompt():
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(host='0.0.0.0', port=5000)
