@@ -1,6 +1,7 @@
 from flask import Flask, request, jsonify
 from emo_model import analyze_emotion
 import os
+import requests
 from mistralai.client import MistralClient
 from mistralai.models.chat_completion import ChatMessage
 import threading
@@ -57,6 +58,10 @@ def analyze_image():
     # prompt_url = "http://localhost:5000/prompt"
     response = request.post('/prompt', json=results)
     fa_endpoint.set()
+=======
+    prompt_url = "http://localhost:5000/prompt"
+    response = requests.post(prompt_url, json=results)
+
     return response.text, response.status_code
 
     # return results
@@ -78,6 +83,12 @@ def generate_prompt():
     # Your prompt generation logic here
     # This is just a placeholder
     prompt = f"Your face analysis shows {analy} emotion and age {data['age']}. Your message: {message}, based on this give me an appropriate response"
+    data_emotion = request.json  # this will be coming from the image analysis
+    data = "I have been feeling very low lately, my cat passed away, he was my best friend for the last 10 years.He was the best thing that ever happened to me. I wanna kill myself"
+
+    # Your prompt generation logic here
+    # This is just a placeholder
+    prompt = f"Your face analysis shows {data_emotion} emotion. Your message: {data}, based on this give me an appropriate response"
 
     # Send prompt to Mistral (replace this with your actual implementation)
 
