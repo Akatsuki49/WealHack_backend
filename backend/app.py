@@ -1,6 +1,7 @@
 from flask import Flask, request, jsonify
 from emo_model import analyze_emotion
 import os
+import base64
 import requests
 from mistralai.client import MistralClient
 from mistralai.models.chat_completion import ChatMessage
@@ -15,6 +16,15 @@ def analyze_face(image):
     # This is a mock function, replace it with your actual ML model
     return {"emotion": "happy", "age": 25}
 
+def base64_to_jpg(base64_string, output_file):
+    # Decode base64 string to bytes
+    image_bytes = base64.b64decode(base64_string)
+    
+    # Write bytes to a JPG file
+    with open(output_file, "wb") as f:
+        f.write(image_bytes)
+
+
 # Endpoint to receive image and send results to /prompt
 
 
@@ -26,12 +36,13 @@ def test_route():
 @app.route('/messages/face', methods=['POST'])
 def analyze_image():
     # Assuming the image is sent as a file
-    image_file = request.files['image']
+    image_file = request.form['image']
     text_input = request.form['text_input']
 
+    base64_to_jpg(image_file,'temp_image.jpg')   
     # Save the image temporarily
     image_path = 'temp_image.jpg'
-    image_file.save(image_path)
+    # image_file.save(image_path)
 
     # Analyze face
     results = analyze_emotion(image_path)
