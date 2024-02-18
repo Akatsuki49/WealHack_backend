@@ -39,8 +39,7 @@ def analyze_image():
     # Assuming the image is sent as a file
     image_file = request.form['image']
     text_input = request.form['text_input']
-
-    base64_to_jpg(image_file, 'temp_image.jpg')
+    base64_to_jpg(image_file,'temp_image.jpg')
     # Save the image temporarily
     image_path = 'temp_image.jpg'
     # image_file.save(image_path)
@@ -78,7 +77,7 @@ def generate_prompt():
 
     # Your prompt generation logic here
     # This is just a placeholder
-    prompt = f"Your face analysis shows {analyze_emotion} emotion. Your message: {data_input}, based on this give me an appropriate response"
+    prompt = f"Your face analysis shows {analyze_emotion} emotion. Your message: {data_input}, based on this give me one single appropriate response (no options)"
 
     # Send prompt to Mistral (replace this with your actual implementation)
 
@@ -97,12 +96,15 @@ def generate_prompt():
     chat_response = client.chat(
         model=model,
         messages=messages,
+        max_tokens=120
     )
 
     # print(chat_response.choices[0].message.content)
     mistral_response = chat_response.choices[0].message.content
-
-    return jsonify({"prompt": prompt, "mistral_response": mistral_response})
+    colon_index = mistral_response.find(":")
+    backslash_index = mistral_response.find("\\")
+    extracted_content = mistral_response[colon_index + 1:backslash_index].strip()
+    return jsonify({"prompt": prompt, "mistral_response": extracted_content})
 
 
 if __name__ == '__main__':
