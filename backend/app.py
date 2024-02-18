@@ -16,10 +16,11 @@ def analyze_face(image):
     # This is a mock function, replace it with your actual ML model
     return {"emotion": "happy", "age": 25}
 
+
 def base64_to_jpg(base64_string, output_file):
     # Decode base64 string to bytes
     image_bytes = base64.b64decode(base64_string)
-    
+
     # Write bytes to a JPG file
     with open(output_file, "wb") as f:
         f.write(image_bytes)
@@ -38,7 +39,6 @@ def analyze_image():
     # Assuming the image is sent as a file
     image_file = request.form['image']
     text_input = request.form['text_input']
-
     base64_to_jpg(image_file,'temp_image.jpg')
     # Save the image temporarily
     image_path = 'temp_image.jpg'
@@ -56,7 +56,7 @@ def analyze_image():
     os.remove(image_path)
 
     # Post results to /prompt endpoint
-    prompt_url = "http://localhost:5000/prompt"
+    prompt_url = "http://172.16.128.173:5000/prompt"
     response = requests.post(prompt_url, json=send_results)
 
     return response.text, response.status_code
@@ -83,6 +83,8 @@ def generate_prompt():
 
     api_key = "T0krPQPq0lNykTpOJIjF3BdEjA4srEB7"
     model = "mistral-tiny"
+
+    print(prompt)
 
     client = MistralClient(api_key=api_key)
 
