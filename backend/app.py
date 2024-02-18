@@ -4,7 +4,9 @@ import os
 import base64
 import requests
 from mistralai.client import MistralClient
+from storage import Storage
 from mistralai.models.chat_completion import ChatMessage
+
 
 app = Flask(__name__)
 
@@ -45,10 +47,11 @@ def analyze_image():
     # image_file.save(image_path)
 
     # Analyze face
-    results = analyze_emotion(image_path)
+    results,age = analyze_emotion(image_path)
 
     send_results = {
         'emotion': results,
+        'age':age,
         'text_input': text_input
     }
 
@@ -74,11 +77,17 @@ def generate_prompt():
     # data_input = "I have been feeling very low lately, my cat passed away, he was my best friend for the last 10 years.He was the best thing that ever happened to me. I wanna kill myself"
     analyze_emotion = data['emotion']
     data_input = data['text_input']
+    age=data['age']
 
     # Your prompt generation logic here
     # This is just a placeholder
-    prompt = f"Your face analysis shows {analyze_emotion} emotion. Your message: {data_input}, based on this give me one single appropriate response (no options)"
-
+    # storage.store_user_prompt(data_input)
+    with open("prompts.txt","wb") as f:
+        f.write(data_input+". ")
+    txt1=""
+    with open("prompt.txt","rb") as f:
+        txt1=f.read()
+    prompt = f"Your face analysis shows {analyze_emotion} emotion and you are {age} years. Your message: {txt1} , based on this give me one single appropriate response (no options), make sure to be as comforting in your answer as you can "
     # Send prompt to Mistral (replace this with your actual implementation)
 
     api_key = "T0krPQPq0lNykTpOJIjF3BdEjA4srEB7"
