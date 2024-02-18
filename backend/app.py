@@ -4,7 +4,7 @@ import os
 import base64
 import requests
 from mistralai.client import MistralClient
-from storage import Storage
+# from storage import Storage
 from mistralai.models.chat_completion import ChatMessage
 
 
@@ -41,17 +41,17 @@ def analyze_image():
     # Assuming the image is sent as a file
     image_file = request.form['image']
     text_input = request.form['text_input']
-    base64_to_jpg(image_file,'temp_image.jpg')
+    base64_to_jpg(image_file, 'temp_image.jpg')
     # Save the image temporarily
     image_path = 'temp_image.jpg'
     # image_file.save(image_path)
 
     # Analyze face
-    results,age = analyze_emotion(image_path)
+    results, age = analyze_emotion(image_path)
 
     send_results = {
         'emotion': results,
-        'age':age,
+        'age': age,
         'text_input': text_input
     }
 
@@ -77,16 +77,16 @@ def generate_prompt():
     # data_input = "I have been feeling very low lately, my cat passed away, he was my best friend for the last 10 years.He was the best thing that ever happened to me. I wanna kill myself"
     analyze_emotion = data['emotion']
     data_input = data['text_input']
-    age=data['age']
+    age = data['age']
 
     # Your prompt generation logic here
     # This is just a placeholder
     # storage.store_user_prompt(data_input)
-    with open("prompts.txt","wb") as f:
+    with open("prompts1.txt", "a") as f:
         f.write(data_input+". ")
-    txt1=""
-    with open("prompt.txt","rb") as f:
-        txt1=f.read()
+    txt1 = ""
+    with open("prompts1.txt", "r") as f:
+        txt1 = f.read()
     prompt = f"Your face analysis shows {analyze_emotion} emotion and you are {age} years. Your message: {txt1} , based on this give me one single appropriate response (no options), make sure to be as comforting in your answer as you can "
     # Send prompt to Mistral (replace this with your actual implementation)
 
@@ -112,8 +112,10 @@ def generate_prompt():
     mistral_response = chat_response.choices[0].message.content
     colon_index = mistral_response.find(":")
     backslash_index = mistral_response.find("\\")
-    extracted_content = mistral_response[colon_index + 1:backslash_index].strip()
-    return jsonify({"prompt": prompt, "mistral_response": extracted_content})
+    extracted_content = mistral_response[colon_index +
+                                         1:backslash_index].strip()
+    # return jsonify({"prompt": prompt, "mistral_response": extracted_content})
+    return extracted_content
 
 
 if __name__ == '__main__':
