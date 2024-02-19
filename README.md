@@ -6,6 +6,7 @@
 - [Screenshots](#screenshots)
 - [How It Works](#how-it-works)
 - [Tech Stack](#tech-stack)
+- [Contributors](#contributors)
 - [Team bh.AI](#team-bhai)
 
 
@@ -68,6 +69,24 @@ bh.AI is built using Flutter for the frontend, Flask for the backend, Mistral AI
 - **Backend:** Flask - Backend for the app, uses python , does the image processing as well as queries the LLM using the prompt we engineered  
 - **AI Querying:** Mistral AI - An open source and a secure LLM used in the project. 
 - **Authentication:** Firebase - Backend as a Service software used to manager user authentication.
+
+## Contributors
+
+### Siddhant Jagdish
+- GitHub: [Siddhant Jagdish](https://github.com/siddhantjagdish)
+- Work: Designed the entire app along with wireframing on Figma.
+
+### Shubh Kanodia
+- GitHub: [Shubh Kanodia](https://github.com/ShubhKanodia)
+- Work: Frontend development, integrated login through Firebase, and implemented the chat screen with image capture.
+
+### Sowmesh Sharma
+- GitHub: [Sowmesh Sharma](https://github.com/SowmeshSharma0411)
+- Work: Frontend development, integrated Flask with Flutter, and created endpoints for the chat service.
+
+### Shubham Kanekal
+- GitHub: [Shubham Kanekal](https://github.com/shubhamk10)
+- Work: Worked on image analysis using DeepFace, combined chat and image data for querying Mistral, and integrated Flask and Mistral.
 
 ## Team bh.AI
 
