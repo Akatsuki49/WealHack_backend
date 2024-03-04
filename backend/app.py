@@ -115,6 +115,10 @@ def generate_prompt():
     extracted_content = mistral_response[colon_index +
                                          1:backslash_index].strip()
     # return jsonify({"prompt": prompt, "mistral_response": extracted_content})
+
+    # write back extracted content back to the file
+    with open("prompts1.txt", "w") as f:
+        f.write(extracted_content+". ")
     return extracted_content
 
 
